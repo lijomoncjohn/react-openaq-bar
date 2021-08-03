@@ -12,9 +12,10 @@ export const PollutionAction = {
 			country,
 		};
 	},
-	getMeasurement() {
+	getMeasurement(values) {
 		return {
 			type: ActionType.FETCH_MEASUREMENT_BEGIN,
+			values,
 		};
 	},
 };

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { Formik } from 'formik';
 import React, { useEffect, useState } from 'react';
 import { Chat } from 'react-charts';
 import { useDispatch, useSelector } from 'react-redux';
@@ -771,53 +772,81 @@ const Home = () => {
 
 	const countries = useSelector((state) => state.pollution.country.results);
 	const cities = useSelector((state) => state.pollution.city.results);
+	const measurements = useSelector(
+		(state) => state.pollution.measurement.results
+	);
 
 	useEffect(() => {
 		dispatch(PollutionAction.getCountry());
 	}, []);
 
 	const fetchCities = (e) => {
-		console.log(e.target.value);
 		dispatch(PollutionAction.getCity(e.target.value));
 	};
 
-	useEffect(() => {
-		console.log(cities);
-	}, [dispatch, cities]);
+	const handleSubmit = (values, { setSubmitting }) => {
+		console.log(values);
+		dispatch(PollutionAction.getMeasurement(values));
+	};
 
 	return (
 		<div>
-			<form>
-				<div class='row'>
-					<div class='col'>
-						<select
-							class='form-select'
-							name={'country'}
-							onChange={(e) => fetchCities(e)}>
-							<option selected>Country</option>
-							{countries.map((d) => (
-								<option value={d.code}>{d.name}</option>
-							))}
-						</select>
-					</div>
-					<div class='col'>
-						<select class='form-select' name={'city'}>
-							<option selected>City</option>
-							{cities.length > 0
-								? cities.map((d) => <option value={d.city}>{d.city}</option>)
-								: null}
-						</select>
-					</div>
-					<div class='col'>
-						<button className='btn btn-primary' type='submit'>
-							GO
-						</button>
-					</div>
-				</div>
-			</form>
-
+			<Formik
+				initialValues={{ country: '', city: '' }}
+				onSubmit={(values, { setSubmitting }) => {
+					handleSubmit(values, { setSubmitting });
+				}}>
+				{({
+					values,
+					errors,
+					touched,
+					handleChange,
+					handleBlur,
+					handleSubmit,
+					isSubmitting,
+				}) => (
+					<form onSubmit={handleSubmit}>
+						<div class='row'>
+							<div class='col'>
+								<select
+									class='form-select'
+									name={'country'}
+									value={values.country}
+									onBlur={handleBlur}
+									onChange={(e) => {
+										fetchCities(e);
+										handleChange(e);
+									}}>
+									<option selected>Country</option>
+									{countries.map((d) => (
+										<option value={d.code}>{d.name}</option>
+									))}
+								</select>
+							</div>
+							<div class='col'>
+								<select
+									class='form-select'
+									name={'city'}
+									value={values.city}
+									onChange={handleChange}
+									onBlur={handleBlur}>
+									<option selected>City</option>
+									{cities.length > 0
+										? cities.map((d) => <option value={d.city}>{d.city}</option>)
+										: null}
+								</select>
+							</div>
+							<div class='col'>
+								<button className='btn btn-primary' type='submit'>
+									GO
+								</button>
+							</div>
+						</div>
+					</form>
+				)}
+			</Formik>
 			<div class='row row-cols-1 row-cols-md-3 g-4 mt-3'>
-				{/* {measurements.map((m) => (
+				{measurements.map((m) => (
 					<div class='col'>
 						<div class='card'>
 							<div class='card-body'>
@@ -827,7 +856,7 @@ const Home = () => {
 							</div>
 						</div>
 					</div>
-				))} */}
+				))}
 			</div>
 		</div>
 	);
