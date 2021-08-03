@@ -12,9 +12,9 @@ function App() {
 		<Router>
 			<Switch>
 				<Layout>
-					<Route path='/repo' component={Repo} />
-					<Route path='/about' component={About} />
-					<Route path='/' component={Home} />
+					<Route path='/repo' component={Repo} exact />
+					<Route path='/about' component={About} exact />
+					<Route path='/' component={Home} exact />
 				</Layout>
 			</Switch>
 		</Router>

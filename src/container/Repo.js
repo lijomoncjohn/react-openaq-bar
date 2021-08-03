@@ -1,7 +1,7 @@
 import React from 'react';
 
 const Repo = () => {
-	return <div></div>;
+	return <div>Repo</div>;
 };
 
 export default Repo;
