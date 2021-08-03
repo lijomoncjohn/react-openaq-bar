@@ -1,9 +1,11 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Chat } from 'react-charts';
+import { useDispatch, useSelector } from 'react-redux';
 
 import Card from '../component/UI/Card';
 import CardBody from '../component/UI/CardBody';
+import { PollutionAction } from '../core/entities/pollution/action';
 
 const poll_data = [
 	{
@@ -765,61 +767,27 @@ const poll_data = [
 ];
 
 const Home = () => {
-	const [cities, setCities] = useState([]);
-	const [countries, setCountries] = useState([]);
-	const [measurements, setMeasurements] = useState([]);
+	const dispatch = useDispatch();
+
+	const countries = useSelector((state) => state.pollution.country.results);
+	const cities = useSelector((state) => state.pollution.city.results);
 
 	useEffect(() => {
-		fetch('https://docs.openaq.org/v2/countries', {
-			method: 'GET',
-		})
-			.then((res) => res.json())
-			.then(
-				(result) => {
-					setCountries(result.results);
-				},
-				(error) => {
-					console.log(error);
-				}
-			);
+		dispatch(PollutionAction.getCountry());
 	}, []);
 
 	const fetchCities = (e) => {
-		fetch(`https://docs.openaq.org/v2/cities?country=${e.target.value}`, {
-			method: 'GET',
-		})
-			.then((res) => res.json())
-			.then(
-				(result) => {
-					console.log(result.results);
-					setCities(result.results);
-				},
-				(error) => {
-					console.log(error);
-				}
-			);
+		console.log(e.target.value);
+		dispatch(PollutionAction.getCity(e.target.value));
 	};
 
-	const fetchMeasurements = (e) => {
-		e.preventDefault();
-		fetch(`https://docs.openaq.org/v2/measurements?country=IN&city=Ajmer`, {
-			method: 'GET',
-		})
-			.then((res) => res.json())
-			.then(
-				(result) => {
-					console.log(result.results);
-					setMeasurements(result.results);
-				},
-				(error) => {
-					console.log(error);
-				}
-			);
-	};
+	useEffect(() => {
+		console.log(cities);
+	}, [dispatch, cities]);
 
 	return (
 		<div>
-			<form onSubmit={fetchMeasurements}>
+			<form>
 				<div class='row'>
 					<div class='col'>
 						<select
@@ -838,7 +806,7 @@ const Home = () => {
 							{cities.length > 0
 								? cities.map((d) => <option value={d.city}>{d.city}</option>)
 								: null}
-						</select>{' '}
+						</select>
 					</div>
 					<div class='col'>
 						<button className='btn btn-primary' type='submit'>
@@ -849,7 +817,7 @@ const Home = () => {
 			</form>
 
 			<div class='row row-cols-1 row-cols-md-3 g-4 mt-3'>
-				{measurements.map((m) => (
+				{/* {measurements.map((m) => (
 					<div class='col'>
 						<div class='card'>
 							<div class='card-body'>
@@ -859,7 +827,7 @@ const Home = () => {
 							</div>
 						</div>
 					</div>
-				))}
+				))} */}
 			</div>
 		</div>
 	);

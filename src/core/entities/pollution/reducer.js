@@ -38,6 +38,24 @@ const reducer = createReducer(initialPollutionState, {
 		state.city.results = [];
 		state.city.error = { message: 'Error fetching city list' };
 	},
+
+	[ActionType.FETCH_MEASUREMENT_BEGIN]: (state) => {
+		state.measurement.meta = {};
+		state.measurement.results = [];
+		state.measurement.error = {};
+	},
+	[ActionType.FETCH_MEASUREMENT_SUCCESS]: (state, data) => {
+		state.apiStatus = 1;
+		state.measurement.meta = data.data.meta;
+		state.measurement.results = data.data.results;
+		state.measurement.error = {};
+	},
+	[ActionType.FETCH_MEASUREMENT_FAILED]: (state, data) => {
+		state.apiStatus = 1;
+		state.measurement.meta = {};
+		state.measurement.results = [];
+		state.measurement.error = { message: 'Error fetching measurement list' };
+	},
 });
 
 export default reducer;

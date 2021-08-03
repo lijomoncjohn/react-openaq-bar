@@ -1,6 +1,10 @@
 import { all } from 'redux-saga/effects';
-import { countryWatch } from '../entities/pollution/saga';
+import {
+	cityWatch,
+	countryWatch,
+	measurementWatch,
+} from '../entities/pollution/saga';
 
 export default function* rootSaga() {
-	yield all([countryWatch()]);
+	yield all([countryWatch(), cityWatch(), measurementWatch()]);
 }

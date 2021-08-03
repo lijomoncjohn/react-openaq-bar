@@ -22,4 +22,44 @@ const countryWatch = function* () {
 	yield takeLatest(ActionType.FETCH_COUNTRY_BEGIN, countrySaga);
 };
 
-export { countryWatch };
+const citySaga = function* (action) {
+	const cityResponse = yield Service.fetchCity(action.country);
+
+	if (!cityResponse.error) {
+		yield put({
+			type: ActionType.FETCH_CITY_SUCCESS,
+			data: cityResponse.value,
+		});
+	} else {
+		yield put({
+			type: ActionType.FETCH_CITY_FAILED,
+			data: cityResponse.value,
+		});
+	}
+};
+
+const cityWatch = function* () {
+	yield takeLatest(ActionType.FETCH_CITY_BEGIN, citySaga);
+};
+
+const measurementSaga = function* (action) {
+	const measurementResponse = yield Service.fetchMeasurement();
+
+	if (!measurementResponse.error) {
+		yield put({
+			type: ActionType.FETCH_MEASUREMENT_SUCCESS,
+			data: measurementResponse.value,
+		});
+	} else {
+		yield put({
+			type: ActionType.FETCH_MEASUREMENT_FAILED,
+			data: measurementResponse.value,
+		});
+	}
+};
+
+const measurementWatch = function* () {
+	yield takeLatest(ActionType.FETCH_MEASUREMENT_BEGIN, measurementSaga);
+};
+
+export { countryWatch, cityWatch, measurementWatch };
