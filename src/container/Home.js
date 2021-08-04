@@ -60,78 +60,82 @@ const Home = () => {
 
 	return (
 		<div>
-			<Formik
-				initialValues={{ country: '', city: '', date_from: '', date_to: '' }}
-				onSubmit={(values, { setSubmitting }) => {
-					handleSubmit(values, { setSubmitting });
-				}}>
-				{({
-					values,
-					errors,
-					touched,
-					handleChange,
-					handleBlur,
-					handleSubmit,
-					isSubmitting,
-				}) => (
-					<form onSubmit={handleSubmit}>
-						<div class='row'>
-							<div class='col'>
-								<select
-									class='form-select'
-									name={'country'}
-									value={values.country}
-									onBlur={handleBlur}
-									onChange={(e) => {
-										fetchCities(e);
-										handleChange(e);
-									}}>
-									<option selected>Country</option>
-									{countries.map((d) => (
-										<option value={d.code}>{d.name}</option>
-									))}
-								</select>
-							</div>
-							<div class='col'>
-								<select
-									class='form-select'
-									name={'city'}
-									value={values.city}
-									onChange={handleChange}
-									onBlur={handleBlur}>
-									<option selected>City</option>
-									{cities.length > 0
-										? cities.map((d) => <option value={d.city}>{d.city}</option>)
-										: null}
-								</select>
-							</div>
-							<div class='col'>
-								<TextInput
-									type='date'
-									name='date_from'
-									value={values.date_from}
-									onChange={handleChange}
-									onBlur={handleBlur}
-								/>
-							</div>
-							<div class='col'>
-								<TextInput
-									type='date'
-									name='date_to'
-									value={values.date_to}
-									onChange={handleChange}
-									onBlur={handleBlur}
-								/>
-							</div>
-							<div class='col'>
-								<button className='btn btn-primary' type='submit'>
-									GO
-								</button>
-							</div>
-						</div>
-					</form>
-				)}
-			</Formik>
+			<Card>
+				<CardBody>
+					<Formik
+						initialValues={{ country: '', city: '', date_from: '', date_to: '' }}
+						onSubmit={(values, { setSubmitting }) => {
+							handleSubmit(values, { setSubmitting });
+						}}>
+						{({
+							values,
+							errors,
+							touched,
+							handleChange,
+							handleBlur,
+							handleSubmit,
+							isSubmitting,
+						}) => (
+							<form onSubmit={handleSubmit}>
+								<div class='row'>
+									<div class='col'>
+										<select
+											class='form-select'
+											name={'country'}
+											value={values.country}
+											onBlur={handleBlur}
+											onChange={(e) => {
+												fetchCities(e);
+												handleChange(e);
+											}}>
+											<option selected>Country</option>
+											{countries.map((d) => (
+												<option value={d.code}>{d.name}</option>
+											))}
+										</select>
+									</div>
+									<div class='col'>
+										<select
+											class='form-select'
+											name={'city'}
+											value={values.city}
+											onChange={handleChange}
+											onBlur={handleBlur}>
+											<option selected>City</option>
+											{cities.length > 0
+												? cities.map((d) => <option value={d.city}>{d.city}</option>)
+												: null}
+										</select>
+									</div>
+									<div class='col'>
+										<TextInput
+											type='date'
+											name='date_from'
+											value={values.date_from}
+											onChange={handleChange}
+											onBlur={handleBlur}
+										/>
+									</div>
+									<div class='col'>
+										<TextInput
+											type='date'
+											name='date_to'
+											value={values.date_to}
+											onChange={handleChange}
+											onBlur={handleBlur}
+										/>
+									</div>
+									<div class='col'>
+										<button className='btn btn-primary' type='submit'>
+											GO
+										</button>
+									</div>
+								</div>
+							</form>
+						)}
+					</Formik>
+				</CardBody>
+			</Card>
 			<div class='d-flex flex-row bd-highlight mb-3 mt-3'>
 				{parameters.map((p) => (
 					<button class='btn btn-success btn-sm m-2' onClick={groupData}>
