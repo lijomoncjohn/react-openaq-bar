@@ -17,7 +17,7 @@ export class Service extends ApiWrapper {
 	}
 	static async fetchMeasurement(values) {
 		return this.sendRequest({
-			url: `${Config.CONTROLLER_MEASUREMENT}?country=${values.country}&city=${values.city}`,
+			url: `${Config.CONTROLLER_MEASUREMENT}?country=${values.country}&city=${values.city}&date_from=${values.date_from}&date_to=${values.date_to}`,
 			method: ApiMethods.GET,
 		});
 	}

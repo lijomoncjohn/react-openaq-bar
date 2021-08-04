@@ -3,10 +3,12 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Bar } from 'react-chartjs-2';
 
-import Card from '../component/UI/Card';
-import CardBody from '../component/UI/CardBody';
+import Card from '../component/UI/Card/Card';
+import CardBody from '../component/UI/Card/CardBody';
 import { PollutionAction } from '../core/entities/pollution/action';
 import groupDataItem from '../utils/groupDataItem';
+import BarChart from '../component/UI/Chart/BarChart';
+import TextInput from '../component/Form/TextInput';
 
 const Home = () => {
 	const dispatch = useDispatch();
@@ -44,10 +46,11 @@ const Home = () => {
 		let dates = [],
 			values = [];
 		const parameterName = e.target.innerText;
-		var groupedPeople = groupDataItem(measurements, 'parameter');
-		await setPollutionData(groupedPeople[parameterName]);
+		var groupedData = groupDataItem(measurements, 'parameter');
+		await setPollutionData(groupedData[parameterName]);
+
 		for (const pollutionDataItem of pollutionData) {
-			dates.push(pollutionDataItem.date.local.toString());
+			dates.push(pollutionDataItem.date.local);
 			values.push(pollutionDataItem.value);
 		}
 
@@ -58,7 +61,7 @@ const Home = () => {
 	return (
 		<div>
 			<Formik
-				initialValues={{ country: '', city: '' }}
+				initialValues={{ country: '', city: '', date_from: '', date_to: '' }}
 				onSubmit={(values, { setSubmitting }) => {
 					handleSubmit(values, { setSubmitting });
 				}}>
@@ -103,6 +106,24 @@ const Home = () => {
 								</select>
 							</div>
 							<div class='col'>
+								<TextInput
+									type='date'
+									name='date_from'
+									value={values.date_from}
+									onChange={handleChange}
+									onBlur={handleBlur}
+								/>
+							</div>
+							<div class='col'>
+								<TextInput
+									type='date'
+									name='date_to'
+									value={values.date_to}
+									onChange={handleChange}
+									onBlur={handleBlur}
+								/>
+							</div>
+							<div class='col'>
 								<button className='btn btn-primary' type='submit'>
 									GO
 								</button>
@@ -113,35 +134,15 @@ const Home = () => {
 			</Formik>
 			<div class='d-flex flex-row bd-highlight mb-3 mt-3'>
 				{parameters.map((p) => (
-					<button class='btn btn-success m-2' onClick={groupData}>
+					<button class='btn btn-success btn-sm m-2' onClick={groupData}>
 						{p}
 					</button>
 				))}
 			</div>
-			{/* <div class='row row-cols-1 row-cols-md-3 g-4  mb-3'>
-				{pollutionData.map((m) => (
-					<div class='col'>
-						<div class='card'>
-							<div class='card-body'>
-								<h5 class='card-title'>{m.location}</h5>
-								<p class='card-text'>{m.parameter}</p>
-								<p class='card-text'>{m.value}</p>
-								<p class='card-text'>{m.date.local}</p>
-							</div>
-						</div>
-					</div>
-				))}
-			</div> */}
-			<Bar
-				data={{
-					labels: pollutionDate,
-					datasets: [{ label: '# pollution', data: pollutionValue }],
-					backgroundColor: ['#4287f5'],
-				}}
-				width={100}
-				height={40}
-				options={{ maintainAspectRatio: true }}
-			/>
+
+			{pollutionDate.length > 0 && pollutionValue.length > 0 && (
+				<BarChart labels={pollutionDate} datasets={pollutionValue} />
+			)}
 		</div>
 	);
 };
